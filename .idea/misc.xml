@@ -72,5 +72,5 @@
   <component name="ProjectResources">
     <resource url="http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" location="$PROJECT_DIR$/dtd/svg11.dtd" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 2.7 (nikuda)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.10 (miflaga)" project-jdk-type="Python SDK" />
 </project>

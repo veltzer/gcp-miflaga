@@ -19,7 +19,7 @@
       <excludeFolder url="file://$MODULE_DIR$/old_code" />
       <excludeFolder url="file://$MODULE_DIR$/tools" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 2.7 (nikuda)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.10 (miflaga)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Google App Engine SDK" level="project" />
   </component>
