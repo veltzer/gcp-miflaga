@@ -1,14 +1,14 @@
-## gae-miflaga
+## miflaga
 
 version: 0.0.1
 
 description: miflaga web site
 
-website: https://veltzer.github.io/gae-miflaga
+website: https://veltzer.github.io/miflaga
 
 ## build
 
-![build](https://github.com/veltzer/gae-miflaga/workflows/build/badge.svg)
+![build](https://github.com/veltzer/miflaga/workflows/build/badge.svg)
 
 miflaga lets you create names for Israeli parties
 
