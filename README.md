@@ -6,13 +6,13 @@ description: miflaga web site
 
 website: https://veltzer.github.io/miflaga
 
-## build
+## Build
 
 ![build](https://github.com/veltzer/miflaga/workflows/build/badge.svg)
 
 miflaga lets you create names for Israeli parties
 
-## contact
+## Contact
 
 chat with me at [![gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/veltzer/mark.veltzer)
 
