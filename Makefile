@@ -12,9 +12,9 @@ DO_CHECKHTML:=1
 # do you want to validate css?
 DO_CHECKCSS:=0
 
-#########
-# tools #
-#########
+########
+# code #
+########
 TOOL_COMPILER:=tools/closure-compiler-v20160822.jar
 TOOL_JSMIN:=tools/jsmin
 TOOL_CSS_VALIDATOR:=tools/css-validator/css-validator.jar
@@ -30,9 +30,7 @@ JSCHECK:=out/jscheck.stamp
 HTMLCHECK:=out/html.stamp
 CSSCHECK:=out/css.stamp
 
-########
-# code #
-########
+ALL:=
 CLEAN:=
 
 ifeq ($(DO_CHECKJS),1)
@@ -66,11 +64,9 @@ SOURCES_JS:=$(shell find static/js -type f -and -name "*.js")
 SOURCES_HTML:=$(shell find static/html -type f -and -name "*.html")
 SOURCES_CSS:=$(shell find static/css -type f -and -name "*.css")
 
-# all variables between the snapshot of BUILT_IN_VARS and this place in the code
-DEFINED_VARS:=$(filter-out $(BUILT_IN_VARS) BUILT_IN_VARS, $(.VARIABLES))
-###########
-# targets #
-###########
+#########
+# rules #
+#########
 .PHONY: all
 all: $(ALL)
 	@true
@@ -78,7 +74,6 @@ all: $(ALL)
 .PHONY: debug
 debug:
 	$(info doing [$@])
-	$(foreach v, $(DEFINED_VARS), $(info $(v) = $($(v))))
 .PHONY: clean
 clean:
 	$(info doing [$@])
