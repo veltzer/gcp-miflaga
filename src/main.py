@@ -6,8 +6,7 @@ Miflaga website to generate funny names for political parties in Israel
 import flask
 
 
-# the app object
-app = flask.Flask(__name__, static_url_path="")
+app = flask.Flask(__name__)
 
 # this route is not needed in production
 @app.route("/", methods=["GET"])
