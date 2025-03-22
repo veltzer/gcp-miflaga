@@ -1,3 +1,4 @@
+""" project definitions """
 name = "miflaga"
 name_fancy = "miflaga"
 description_short = "miflaga web site"
