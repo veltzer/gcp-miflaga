@@ -5,7 +5,6 @@ Miflaga website to generate funny names for political parties in Israel
 
 from flask import Flask
 
-
 app = Flask(__name__)
 
 @app.route("/")
