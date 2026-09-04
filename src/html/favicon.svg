@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+	<!-- ballot slip, sliding into the slot -->
+	<g transform="rotate(-12 32 20)">
+		<rect x="22" y="4" width="20" height="26" rx="2" fill="#ffffff" stroke="#0038b8" stroke-width="2"/>
+		<path d="M26 11h12M26 16h12M26 21h8" stroke="#0038b8" stroke-width="2" stroke-linecap="round"/>
+	</g>
+	<!-- ballot box -->
+	<rect x="5" y="26" width="54" height="34" rx="5" fill="#0038b8"/>
+	<rect x="5" y="26" width="54" height="9" rx="4" fill="#002a8a"/>
+	<rect x="20" y="28" width="24" height="4" rx="2" fill="#0b1440"/>
+	<!-- Star of David on the front -->
+	<g fill="none" stroke="#ffffff" stroke-width="2" stroke-linejoin="miter">
+		<path d="M32 40 L38.5 51.25 L25.5 51.25 Z"/>
+		<path d="M32 55 L38.5 43.75 L25.5 43.75 Z"/>
+	</g>
+</svg>

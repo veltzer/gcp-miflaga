@@ -1,14 +1,26 @@
 """
 Miflaga website to generate funny names for political parties in Israel
+
+A party name is a noun plus a descriptor, where one is positive and the
+other negative: "תקווה מוגבלת" (limited hope) or "מיסים נצחיים" (eternal
+taxes). Hebrew adjectives agree with the noun in gender and number, so the
+word bank (src/data/words.json) carries that information and the generator
+picks the matching form.
 """
 
 
 import json
 import os
+import random
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, redirect
 
-app = Flask(__name__)
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+# Hebrew letters that may open a word (no final forms), for the ballot code.
+HEBREW_LETTERS = "אבגדהוזחטיכלמנסעפצקרשת"
+
+app = Flask(__name__, static_folder="html", static_url_path="/static")
 
 
 def load_build_info():
@@ -20,14 +32,70 @@ def load_build_info():
         return {"deploy_date": "unknown", "git_describe": "dev"}
 
 
+def load_words():
+    """ Load the Hebrew word bank shipped next to this module. """
+    with open(os.path.join(HERE, "data", "words.json"), encoding="UTF8") as fp:
+        return json.load(fp)
+
+
 app.config["build_info"] = load_build_info()
+app.config["words"] = load_words()
+
+
+def describe(noun, descriptor):
+    """ The descriptor form that agrees with the noun in gender and number.
+
+    Uninflected phrases ("לכולם") carry a single "all" form.
+    """
+    if "all" in descriptor:
+        return descriptor["all"]
+    return descriptor[noun["gender"] + noun["number"]]
+
+
+def ballot_letters(noun, adjective, rng):
+    """ A ballot code like the real ones: initials, sometimes a third letter. """
+    letters = noun[0] + adjective[0]
+    if rng.random() < 0.5:
+        letters += rng.choice(HEBREW_LETTERS)
+    return letters
+
+
+def make_name(words, rng=random):
+    """ Generate one party name from the word bank. """
+    if rng.random() < 0.5:
+        kind = "positive-negative"
+        noun = rng.choice(words["positive_nouns"])
+        descriptor = rng.choice(words["negative_descriptors"])
+    else:
+        kind = "negative-positive"
+        noun = rng.choice(words["negative_nouns"])
+        descriptor = rng.choice(words["positive_descriptors"])
+    adjective = describe(noun, descriptor)
+    return {
+        "noun": noun["word"],
+        "adjective": adjective,
+        "name": f"{noun['word']} {adjective}",
+        "letters": ballot_letters(noun["word"], adjective, rng),
+        "kind": kind,
+    }
 
 
 @app.route("/")
 def index():
     """ root of the site """
-    return "<html><body>hello</body></html>"
-    # return app.send_static_file("html/index.html")
+    return app.send_static_file("index.html")
+
+
+@app.route("/favicon.ico")
+def favicon():
+    """ Browsers ask for this path by default; the icon is an SVG. """
+    return redirect("/static/favicon.svg")
+
+
+@app.route("/app/name")
+def name():
+    """ One freshly generated party name. """
+    return jsonify(make_name(app.config["words"]))
 
 
 @app.route("/app/version")
@@ -37,6 +105,7 @@ def version():
     # Cloud Run injects the serving revision name at runtime.
     info["revision"] = os.environ.get("K_REVISION", "local")
     return jsonify(info)
+
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=8080, debug=False)

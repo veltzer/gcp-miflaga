@@ -1,12 +1,43 @@
-﻿<!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>Miflaga</title>
-		<meta content="all audiences" name="rating" />
-		<meta content="Mark Veltzer" name="author" />
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>מפלגה – מחולל שמות למפלגות</title>
+		<meta name="description" content="מחולל שמות מצחיקים למפלגות ישראליות: מילה חיובית, מילה שלילית, ומפלגה חדשה נולדה.">
+		<meta name="author" content="Mark Veltzer">
+		<meta name="rating" content="all audiences">
+		<meta name="theme-color" content="#0038b8">
+		<link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;900&amp;family=Heebo:wght@400;700&amp;display=swap">
+		<link rel="stylesheet" href="/static/style.css">
 	</head>
-	<body dir="rtl">
-		<h1>שלום</h1>
+	<body>
+		<canvas id="flag" aria-hidden="true"></canvas>
+		<main class="card">
+			<header>
+				<h1>מפלגה</h1>
+				<p class="tagline">מחולל שמות למפלגות שעוד לא קמו</p>
+			</header>
+			<section class="ballot" id="ballot" aria-live="polite" aria-label="פתק הצבעה">
+				<div class="letters" id="letters">...</div>
+				<div class="name">
+					<span class="word noun" id="noun">רגע</span>
+					<span class="word adjective" id="adjective">אחד</span>
+				</div>
+			</section>
+			<div class="actions">
+				<button id="generate" type="button" class="primary">מפלגה חדשה!</button>
+				<button id="copy" type="button">העתקת השם</button>
+				<button id="share" type="button" hidden>שיתוף</button>
+			</div>
+			<p class="status" id="status" role="status"></p>
+		</main>
+		<footer>
+			<p>מילה חיובית, מילה שלילית, ומפלגה חדשה נולדה. כל קשר למפלגה אמיתית הוא צירוף מקרים מצער.</p>
+		</footer>
+		<script src="/static/app.js"></script>
 	</body>
 </html>
