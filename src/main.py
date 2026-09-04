@@ -52,24 +52,40 @@ def describe(noun, descriptor):
     return descriptor[noun["gender"] + noun["number"]]
 
 
+def initial(word, rng):
+    """ The word's first letter, or a random one when it does not start with a Hebrew letter ("2026"). """
+    if word[0] in HEBREW_LETTERS:
+        return word[0]
+    return rng.choice(HEBREW_LETTERS)
+
+
 def ballot_letters(noun, adjective, rng):
     """ A ballot code like the real ones: initials, sometimes a third letter. """
-    letters = noun[0] + adjective[0]
+    letters = initial(noun, rng) + initial(adjective, rng)
     if rng.random() < 0.5:
         letters += rng.choice(HEBREW_LETTERS)
     return letters
+
+
+def pick(pool, rng):
+    """ A weighted random entry; the weight defaults to 1.
+
+    Words lifted from the names of real parties carry a heavier weight in the
+    word bank so that the generated names echo names people recognize.
+    """
+    return rng.choices(pool, weights=[entry.get("weight", 1) for entry in pool])[0]
 
 
 def make_name(words, rng=random):
     """ Generate one party name from the word bank. """
     if rng.random() < 0.5:
         kind = "positive-negative"
-        noun = rng.choice(words["positive_nouns"])
-        descriptor = rng.choice(words["negative_descriptors"])
+        noun = pick(words["positive_nouns"], rng)
+        descriptor = pick(words["negative_descriptors"], rng)
     else:
         kind = "negative-positive"
-        noun = rng.choice(words["negative_nouns"])
-        descriptor = rng.choice(words["positive_descriptors"])
+        noun = pick(words["negative_nouns"], rng)
+        descriptor = pick(words["positive_descriptors"], rng)
     adjective = describe(noun, descriptor)
     return {
         "noun": noun["word"],

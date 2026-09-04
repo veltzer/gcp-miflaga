@@ -20,6 +20,14 @@ deploy can be verified from the outside:
 gcloud_browse.sh -n app/version
 ```
 
+`gcloud_browse.sh` prefers the custom domain. For the run.app address in
+its stable project-number form (the one to give to scripts and health
+checks), use:
+
+```bash
+gcloud_browser_gcp_url.sh
+```
+
 ## One-time project setup
 
 `gcloud_project_setup.sh` enables the APIs a source deploy needs (Cloud
