@@ -211,6 +211,22 @@ footer p {
 	margin: 0;
 }
 
+.credit {
+	margin-top: 0.5rem;
+}
+
+.credit a {
+	color: var(--blue);
+	text-decoration: none;
+	direction: ltr;
+	unicode-bidi: isolate;
+}
+
+.credit a:hover,
+.credit a:focus-visible {
+	text-decoration: underline;
+}
+
 @media (prefers-reduced-motion: reduce) {
 	.ballot.drop {
 		animation: none;

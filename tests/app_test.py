@@ -16,6 +16,8 @@ def test_get():
     assert 'lang="he"' in response.text
     assert 'dir="rtl"' in response.text
     assert "מפלגה" in response.text
+    assert "מוגש על ידי מארק ולצר" in response.text
+    assert "mailto:mark.veltzer@gmail.com" in response.text
 
 
 def test_static_assets():
