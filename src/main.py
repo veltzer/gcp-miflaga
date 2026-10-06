@@ -16,6 +16,8 @@ import random
 from flask import Flask, jsonify, redirect
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+# build_info.json is written next to src/, at the repo (and image) root.
+BUILD_INFO = os.path.join(os.path.dirname(HERE), "build_info.json")
 
 # Hebrew letters that may open a word (no final forms), for the ballot code.
 HEBREW_LETTERS = "אבגדהוזחטיכלמנסעפצקרשת"
@@ -26,7 +28,7 @@ app = Flask(__name__, static_folder="html", static_url_path="/static")
 def load_build_info():
     """ Load the deploy stamp written by gcloud_run_deploy.sh; absent in dev. """
     try:
-        with open("build_info.json", encoding="UTF8") as fp:
+        with open(BUILD_INFO, encoding="UTF8") as fp:
             return json.load(fp)
     except FileNotFoundError:
         return {"deploy_date": "unknown", "git_describe": "dev"}
