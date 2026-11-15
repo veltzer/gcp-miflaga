@@ -7,7 +7,7 @@ no database and no secrets.
 ## Regular deploy
 
 ```bash
-gcloud_run_deploy.sh
+gcloud_deploy.sh
 ```
 
 The script (from `utils-bash`) wraps `gcloud run deploy --source .`: Cloud
