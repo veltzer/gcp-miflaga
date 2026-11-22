@@ -5,7 +5,7 @@
 
 description: miflaga web site
 
-project website: https://veltzer.github.io/gcp-miflaga
+project website: <https://veltzer.github.io/gcp-miflaga>
 
 author: Mark Veltzer
 
