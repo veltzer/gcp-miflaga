@@ -61,7 +61,8 @@ def test_word_bank_shape():
             assert noun["gender"] in ("m", "f")
             assert noun["number"] in ("s", "p")
             assert set(noun) <= {"word", "gender", "number", "weight"}
-            assert isinstance(noun.get("weight", 1), int) and noun.get("weight", 1) >= 1
+            assert isinstance(noun.get("weight", 1), int)
+            assert noun.get("weight", 1) >= 1
     for key in ("positive_descriptors", "negative_descriptors"):
         assert words[key]
         for descriptor in words[key]:
@@ -71,7 +72,8 @@ def test_word_bank_shape():
             else:
                 assert forms == {"ms", "fs", "mp", "fp"}
             assert all(descriptor.values())
-            assert isinstance(descriptor.get("weight", 1), int) and descriptor.get("weight", 1) >= 1
+            assert isinstance(descriptor.get("weight", 1), int)
+            assert descriptor.get("weight", 1) >= 1
 
 
 def test_word_bank_has_no_duplicates():
