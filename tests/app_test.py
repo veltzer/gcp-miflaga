@@ -35,6 +35,7 @@ def test_static_assets():
 
     response = application.get('/favicon.ico')
     assert response.status_int == 302
+    assert response.location is not None
     assert response.location.endswith("/static/favicon.svg")
 
 
