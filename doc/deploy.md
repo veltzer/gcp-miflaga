@@ -1,7 +1,7 @@
 # Deploying the app to Cloud Run
 
 The app runs as a Cloud Run service called `miflaga` in `us-central1`; the
-gcloud configuration, service name and region are in `.gcp.conf`. It has
+project, service name and region are in `.gcp.conf`. It has
 no database and no secrets.
 
 ## Regular deploy
