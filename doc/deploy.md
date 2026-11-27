@@ -20,7 +20,8 @@ deploy can be verified from the outside:
 gcloud_browse.sh -n app/version
 ```
 
-`gcloud_browse.sh` prefers the custom domain. For the run.app address in
+`/app/version` is the one path that is never redirected, so it can be asked
+of every address. `gcloud_browse.sh` prefers the custom domain. For the run.app address in
 its stable project-number form (the one to give to scripts and health
 checks), use:
 
@@ -33,42 +34,10 @@ gcloud_browser_gcp_url.sh
 `gcloud_project_setup.sh` enables the APIs a source deploy needs (Cloud
 Run, Cloud Build, Artifact Registry). Nothing else is required.
 
-## Custom domain
+## Addresses
 
-The service answers on `https://miflaga.online` (`gcp_domain` in
-`.gcp.conf`). The domain is registered at Cloudflare, which also serves
-its DNS; Cloud Run owns the TLS certificate through a domain mapping, so
-the Cloudflare records are plain DNS (proxy off), or Google could not
-issue and renew the certificate.
-
-Set up once: the domain was verified for the Google account (a
-`google-site-verification` TXT record on `@`), then `gcloud_run_domain.sh`
-created the mapping and printed the `A` and `AAAA` records, which were
-imported at Cloudflare as a BIND zone file with "proxy imported records"
-off. `gcloud_run_domain.sh` doubles as the certificate status check.
-`www.miflaga.online` is not mapped.
-
-### A second name: `miflaga.veltzer.org`
-
-The site is also served, as it is and without a redirect, on every name in
-`gcp_alias_domains` in `.gcp.conf` (space separated). The app does not look
-at the hostname, so a new name needs no deploy, only a mapping and a DNS
-record:
-
-```bash
-gcloud beta run domain-mappings create --service miflaga \
-    --domain miflaga.veltzer.org --region us-central1
-```
-
-The parent domain must be verified (`gcloud domains list-user-verified`
-lists `veltzer.org`). The command prints the record to add at Cloudflare,
-DNS only (proxy off): for a subdomain a `CNAME` to `ghs.googlehosted.com`.
-The certificate's progress shows in:
-
-```bash
-gcloud beta run domain-mappings describe \
-    --domain miflaga.veltzer.org --region us-central1
-```
+The site has one address, `https://miflaga.online`; every other name the
+service answers on redirects there. See [addresses.md](addresses.md).
 
 ## Local development
 

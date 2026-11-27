@@ -1,10 +1,14 @@
 """ Test the miflaga flask app end to end with webtest. """
 
 import random
+from typing import TYPE_CHECKING
 
 import webtest
 
 import main
+
+if TYPE_CHECKING:
+    import pytest
 
 
 def test_get() -> None:
@@ -18,6 +22,30 @@ def test_get() -> None:
     assert "מפלגה" in response.text
     assert "מוגש על ידי מארק ולצר" in response.text
     assert "mailto:mark.veltzer@gmail.com" in response.text
+
+
+def test_canonical_host_redirect(monkeypatch: pytest.MonkeyPatch) -> None:
+    """ Any hostname but the canonical one is redirected to it. """
+    monkeypatch.setitem(main.app.config, "canonical_host", "miflaga.example")
+    application = webtest.TestApp(main.app)
+
+    for host in ("miflaga-123.us-central1.run.app", "miflaga.other.example"):
+        other = {"HTTP_HOST": host}
+        # path and query are kept
+        response = application.get("/app/name?x=1", extra_environ=other)
+        assert response.status_int == 308
+        assert response.location == "https://miflaga.example/app/name?x=1"
+        # the deploy stamp can still be asked of each address directly
+        assert "git_describe" in application.get("/app/version", extra_environ=other).json
+    # the canonical hostname is served as usual
+    assert application.get("/", extra_environ={"HTTP_HOST": "miflaga.example"}).status_int == 200
+
+
+def test_no_canonical_host() -> None:
+    """ Without CANONICAL_HOST (dev) the app answers on any hostname. """
+    application = webtest.TestApp(main.app)
+
+    assert application.get("/", extra_environ={"HTTP_HOST": "127.0.0.1:8080"}).status_int == 200
 
 
 def test_static_assets() -> None:

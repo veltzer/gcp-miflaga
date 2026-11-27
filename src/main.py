@@ -12,9 +12,10 @@ picks the matching form.
 import json
 import os
 import random
+import urllib.parse
 from typing import TYPE_CHECKING, Any
 
-from flask import Flask, jsonify, redirect
+from flask import Flask, jsonify, redirect, request
 
 if TYPE_CHECKING:
     from werkzeug.wrappers.response import Response
@@ -49,6 +50,9 @@ def load_words():
 
 app.config["build_info"] = load_build_info()
 app.config["words"] = load_words()
+# The one hostname the site is served on (gcp_domain in .gcp.conf); empty in
+# dev, where the app answers on whatever host it is reached on.
+app.config["canonical_host"] = os.environ.get("CANONICAL_HOST", "")
 
 
 def describe(noun: dict[str, str], descriptor: dict[str, str]) -> str:
@@ -103,6 +107,21 @@ def make_name(words: dict[str, list[dict[str, Any]]], rng: random.Random = RNG):
         "letters": ballot_letters(noun["word"], adjective, rng),
         "kind": kind,
     }
+
+
+@app.before_request
+def redirect_to_canonical_host() -> Response | None:
+    """ Send every other hostname to the canonical one, path and query kept.
+
+    The service is also reached on its run.app hostnames and on
+    miflaga.veltzer.org (see doc/addresses.md). /app/version is exempt, so
+    the deploy stamp can still be asked of each address directly.
+    """
+    host = app.config["canonical_host"]
+    if not host or request.host == host or request.path == "/app/version":
+        return None
+    url = urllib.parse.urlsplit(request.url)._replace(scheme="https", netloc=host).geturl()
+    return redirect(url, code=308)
 
 
 @app.route("/")
