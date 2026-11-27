@@ -7,7 +7,7 @@ import webtest
 import main
 
 
-def test_get():
+def test_get() -> None:
     """ GET / serves the Hebrew, right-to-left page. """
     application = webtest.TestApp(main.app)
 
@@ -20,7 +20,7 @@ def test_get():
     assert "mailto:mark.veltzer@gmail.com" in response.text
 
 
-def test_static_assets():
+def test_static_assets() -> None:
     """ The page's stylesheet, script and favicon are served. """
     application = webtest.TestApp(main.app)
 
@@ -39,7 +39,7 @@ def test_static_assets():
     assert response.location.endswith("/static/favicon.svg")
 
 
-def test_name_endpoint():
+def test_name_endpoint() -> None:
     """ /app/name returns a two word party name built from its parts. """
     application = webtest.TestApp(main.app)
 
@@ -51,7 +51,7 @@ def test_name_endpoint():
     assert 2 <= len(party["letters"]) <= 3
 
 
-def test_word_bank_shape():
+def test_word_bank_shape() -> None:
     """ Every noun has a gender and number; every descriptor has all forms. """
     words = main.app.config["words"]
     for key in ("positive_nouns", "negative_nouns"):
@@ -76,7 +76,7 @@ def test_word_bank_shape():
             assert descriptor.get("weight", 1) >= 1
 
 
-def test_word_bank_has_no_duplicates():
+def test_word_bank_has_no_duplicates() -> None:
     """ Each word appears once per list. """
     words = main.app.config["words"]
     for key in ("positive_nouns", "negative_nouns"):
@@ -87,7 +87,7 @@ def test_word_bank_has_no_duplicates():
         assert len(seen) == len(set(seen)), key
 
 
-def test_pick_honors_weights():
+def test_pick_honors_weights() -> None:
     """ A heavier entry comes up in proportion to its weight. """
     pool = [{"word": "light"}, {"word": "heavy", "weight": 9}]
     rng = random.Random(7)
@@ -95,7 +95,7 @@ def test_pick_honors_weights():
     assert 4300 < heavy < 4700
 
 
-def test_party_words_dominate():
+def test_party_words_dominate() -> None:
     """ Words from real party names carry weight, so most names echo one. """
     words = main.app.config["words"]
     party_nouns = {n["word"] for n in words["positive_nouns"] if n.get("weight", 1) > 1}
@@ -111,7 +111,7 @@ def test_party_words_dominate():
     assert hits > total * 0.25
 
 
-def test_ballot_letters_are_hebrew():
+def test_ballot_letters_are_hebrew() -> None:
     """ The ballot code is Hebrew even for a descriptor like "2026". """
     rng = random.Random(3)
     letters = main.ballot_letters("שקר", "2026", rng)
@@ -119,7 +119,7 @@ def test_ballot_letters_are_hebrew():
     assert letters[0] == "ש"
 
 
-def test_describe_agrees():
+def test_describe_agrees() -> None:
     """ The descriptor form follows the noun's gender and number. """
     forms = {"ms": "MS", "fs": "FS", "mp": "MP", "fp": "FP"}
     assert main.describe({"gender": "m", "number": "s"}, forms) == "MS"
@@ -129,7 +129,7 @@ def test_describe_agrees():
     assert main.describe({"gender": "f", "number": "p"}, {"all": "X"}) == "X"
 
 
-def test_make_name_mixes_polarity():
+def test_make_name_mixes_polarity() -> None:
     """ Both directions come up and the adjective agrees with its noun. """
     words = main.app.config["words"]
     rng = random.Random(1234)
@@ -147,7 +147,7 @@ def test_make_name_mixes_polarity():
     assert kinds == {"positive-negative", "negative-positive"}
 
 
-def test_version():
+def test_version() -> None:
     """ /app/version serves the deploy stamp and the revision. """
     application = webtest.TestApp(main.app)
 

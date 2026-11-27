@@ -12,8 +12,15 @@ picks the matching form.
 import json
 import os
 import random
+from typing import TYPE_CHECKING, Any
 
 from flask import Flask, jsonify, redirect
+
+if TYPE_CHECKING:
+    from werkzeug.wrappers.response import Response
+
+# The generator behind every served name; tests pass a seeded one instead.
+RNG = random.Random()
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 # build_info.json is written next to src/, at the repo (and image) root.
@@ -44,7 +51,7 @@ app.config["build_info"] = load_build_info()
 app.config["words"] = load_words()
 
 
-def describe(noun, descriptor):
+def describe(noun: dict[str, str], descriptor: dict[str, str]) -> str:
     """ The descriptor form that agrees with the noun in gender and number.
 
     Uninflected phrases ("לכולם") carry a single "all" form.
@@ -54,14 +61,14 @@ def describe(noun, descriptor):
     return descriptor[noun["gender"] + noun["number"]]
 
 
-def initial(word, rng):
+def initial(word: str, rng: random.Random) -> str:
     """ The word's first letter, or a random one when it does not start with a Hebrew letter ("2026"). """
     if word[0] in HEBREW_LETTERS:
         return word[0]
     return rng.choice(HEBREW_LETTERS)
 
 
-def ballot_letters(noun, adjective, rng):
+def ballot_letters(noun: str, adjective: str, rng: random.Random) -> str:
     """ A ballot code like the real ones: initials, sometimes a third letter. """
     letters = initial(noun, rng) + initial(adjective, rng)
     if rng.random() < 0.5:
@@ -69,7 +76,7 @@ def ballot_letters(noun, adjective, rng):
     return letters
 
 
-def pick(pool, rng):
+def pick(pool: list[dict[str, Any]], rng: random.Random):
     """ A weighted random entry; the weight defaults to 1.
 
     Words lifted from the names of real parties carry a heavier weight in the
@@ -78,7 +85,7 @@ def pick(pool, rng):
     return rng.choices(pool, weights=[entry.get("weight", 1) for entry in pool])[0]
 
 
-def make_name(words, rng=random):
+def make_name(words: dict[str, list[dict[str, Any]]], rng: random.Random = RNG):
     """ Generate one party name from the word bank. """
     if rng.random() < 0.5:
         kind = "positive-negative"
@@ -99,25 +106,25 @@ def make_name(words, rng=random):
 
 
 @app.route("/")
-def index():
+def index() -> Response:
     """ root of the site """
     return app.send_static_file("index.html")
 
 
 @app.route("/favicon.ico")
-def favicon():
+def favicon() -> Response:
     """ Browsers ask for this path by default; the icon is an SVG. """
     return redirect("/static/favicon.svg")
 
 
 @app.route("/app/name")
-def name():
+def name() -> Response:
     """ One freshly generated party name. """
     return jsonify(make_name(app.config["words"]))
 
 
 @app.route("/app/version")
-def version():
+def version() -> Response:
     """ What is deployed: the deploy stamp plus the serving Cloud Run revision. """
     info = dict(app.config["build_info"])
     # Cloud Run injects the serving revision name at runtime.
